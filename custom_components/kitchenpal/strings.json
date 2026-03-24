@@ -1,0 +1,20 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect KitchenPal",
+        "description": "Enter your KitchenPal Bearer token. You can find this by intercepting the Authorization header from the KitchenPal app.",
+        "data": {
+          "bearer_token": "Bearer Token"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid or expired Bearer token. Please check and try again.",
+      "cannot_connect": "Could not connect to KitchenPal servers. Check your internet connection."
+    },
+    "abort": {
+      "already_configured": "KitchenPal is already configured."
+    }
+  }
+}

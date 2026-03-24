@@ -1,0 +1,12 @@
+{
+  "domain": "kitchenpal",
+  "name": "KitchenPal",
+  "version": "1.0.0",
+  "documentation": "https://github.com/Suleiman700/KitchenPal-HA-Integration",
+  "issue_tracker": "https://github.com/Suleiman700/KitchenPal-HA-Integration/issues",
+  "dependencies": [],
+  "codeowners": ["@Suleiman700"],
+  "requirements": [],
+  "iot_class": "cloud_polling",
+  "config_flow": true
+}

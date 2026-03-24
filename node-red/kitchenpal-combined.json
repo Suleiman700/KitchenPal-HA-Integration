@@ -1,0 +1,102 @@
+[
+  {
+    "id": "kitchenpal_inject_all",
+    "type": "inject",
+    "name": "Trigger",
+    "props": [{"p": "payload"}, {"p": "topic", "vt": "str"}],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 200,
+    "y": 300,
+    "wires": [["kitchenpal_get_entities_all"]]
+  },
+  {
+    "id": "kitchenpal_get_entities_all",
+    "type": "ha-get-entities",
+    "name": "Get KitchenPal Binary Sensors",
+    "server": "YOUR_HA_SERVER_ID",
+    "version": 1,
+    "rules": [
+      {
+        "condition": "state_object",
+        "property": "entity_id",
+        "logic": "starts_with",
+        "value": "binary_sensor.kitchenpal_integration_",
+        "valueType": "str"
+      }
+    ],
+    "outputType": "array",
+    "outputEmptyResults": false,
+    "outputLocationType": "msg",
+    "outputLocation": "payload",
+    "outputResultsCount": 1,
+    "x": 420,
+    "y": 300,
+    "wires": [["kitchenpal_filter_expired_all", "kitchenpal_filter_soon_all"]]
+  },
+  {
+    "id": "kitchenpal_filter_expired_all",
+    "type": "function",
+    "name": "Get Expired Items",
+    "func": "// Filter only expired items (state = \"on\")\nconst expired = msg.payload.filter(e => e.state === \"on\");\n\nmsg.payload = expired.map(e => ({\n    name: e.attributes.item_name,\n    days_expired: Math.abs(e.attributes.days_until_expiry),\n    storage: e.attributes.storage,\n    category: e.attributes.category,\n    barcode: e.attributes.barcode,\n}));\n\nmsg.topic = `Found ${msg.payload.length} expired item(s)`;\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 680,
+    "y": 220,
+    "wires": [["kitchenpal_debug_expired_all"]]
+  },
+  {
+    "id": "kitchenpal_filter_soon_all",
+    "type": "function",
+    "name": "Get Items Expiring Within 3 Days",
+    "func": "// Filter items expiring within the next 3 days (but not yet expired)\nconst expiringSoon = msg.payload.filter(e => {\n    const days = e.attributes.days_until_expiry;\n    return days !== null && days >= 0 && days <= 3;\n});\n\nmsg.payload = expiringSoon.map(e => ({\n    name: e.attributes.item_name,\n    days_left: e.attributes.days_until_expiry,\n    storage: e.attributes.storage,\n    category: e.attributes.category,\n    barcode: e.attributes.barcode,\n}));\n\nmsg.topic = `Found ${msg.payload.length} item(s) expiring within 3 days`;\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 700,
+    "y": 380,
+    "wires": [["kitchenpal_debug_soon_all"]]
+  },
+  {
+    "id": "kitchenpal_debug_expired_all",
+    "type": "debug",
+    "name": "Expired Items",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 940,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "kitchenpal_debug_soon_all",
+    "type": "debug",
+    "name": "Expiring Soon",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 960,
+    "y": 380,
+    "wires": []
+  }
+]
