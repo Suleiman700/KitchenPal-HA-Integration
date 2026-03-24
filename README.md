@@ -4,6 +4,8 @@ Monitor your fridge and pantry expiry dates directly in Home Assistant.
 
 <img src="thumbnail.png" width="600" />
 
+<img src="Screenshot_20260324_233307_Home Assistant.jpg" width="600" />
+
 ---
 
 ## ⚠️ **Unofficial Integration**
